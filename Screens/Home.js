@@ -6,12 +6,14 @@ import PokemonCard from "../Components/PokemonCard";
 
 export default function Home() {
 const [data, setData] = useState([]);
+const [nextPage, setNextPage] = useState('');
 
     let listPokemon = axios.get('https://pokeapi.co/api/v2/pokemon/');
     useEffect(() => {
         listPokemon.then(function (response) {
             // console.log(response.data);
             setData(response.data);
+            setNextPage(response.data.next)
         })
             .catch(function (error) {
                 console.log(error);
@@ -38,12 +40,11 @@ const [data, setData] = useState([]);
     );
 }
 
+
 const styles = StyleSheet.create({
     container : {
-        marginLeft: 0,
         marginTop: 50,
-        // flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#cbc9c9',
     },
     header: {
         backgroundColor: '#ab0000',
@@ -53,7 +54,8 @@ const styles = StyleSheet.create({
     },
     titre: {
         color: '#fff',
-        fontWeight: "bold"
+        fontWeight: "bold",
+        textAlign: 'center',
     },
     list: {
         padding: 20,
