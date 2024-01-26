@@ -20,6 +20,19 @@ const [nextPage, setNextPage] = useState('');
             });
     }, []);
 
+    const fetchMoreData = () => {
+            axios.get(nextPage)
+                .then(function (response) {
+                    // console.log(response.data);
+                    setData({
+                        results: [...data.results, ...response.data.results],
+                    });
+                    setNextPage(response.data.next)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+    }
     return (
         <View style={styles.container}>
             <View  style={styles.header}>
@@ -31,7 +44,9 @@ const [nextPage, setNextPage] = useState('');
                       numColumns={3}
                       data={data.results}
                       renderItem={({item}) => <PokemonCard name={item.name} url={item.url}/> }
-                      keyExtractor={item => item.name}>
+                      keyExtractor={item => item.name}
+                      onEndReached={fetchMoreData}
+                      onEndReachedThreshold={1.5}>
             </FlatList>
             </View>
             <StatusBar style="auto"/>
