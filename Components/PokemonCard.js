@@ -7,8 +7,7 @@ export default function PokemonCard({name, url, navigation}) {
     const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
 
     return (
-        <TouchableOpacity style={styles.button} title="Go to Details"
-                          onPress={() => navigation.navigate('Détails', {id: id})}>
+        <TouchableOpacity style={styles.button} title="Go to Details" onPress={() => navigation.navigate('Détails', {id: id})}>
             <View style={styles.card}>
                 <Image style={styles.image} source={{uri: image}}/>
                 <View style={styles.titleDiv}>
@@ -32,7 +31,6 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         backgroundColor: '#fff',
-
 
     },
     image: {

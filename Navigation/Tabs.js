@@ -13,7 +13,7 @@ function Navigation() {
     return (
 
         <Stack.Navigator>
-            <Stack.Screen name="Home" component={Home}/>
+            <Stack.Screen name="Home" component={Home} options={{headerShown:false}}/>
             <Stack.Screen name="Détails" component={PokemonDetails}/>
         </Stack.Navigator>
     );
@@ -24,8 +24,26 @@ const Tab = createBottomTabNavigator();
 function MyTabs() {
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Accueil" component={Navigation}/>
-            <Tab.Screen name="Settings" component={Settings}/>
+            <Tab.Screen name="Accueil" component={Navigation} options={{
+                title: 'Pokedex', // Set the title
+                headerStyle: {
+                    backgroundColor: '#ab0000',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                },
+            }}/>
+            <Tab.Screen name="Settings" component={Settings} options={{
+                title: 'Paramètres',
+                headerStyle: {
+                    backgroundColor: '#ab0000',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                },
+            }}/>
         </Tab.Navigator>
     );
 }
