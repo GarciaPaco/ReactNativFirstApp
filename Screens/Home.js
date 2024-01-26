@@ -4,9 +4,9 @@ import {useEffect, useState} from "react";
 import {StatusBar} from "expo-status-bar";
 import PokemonCard from "../Components/PokemonCard";
 
-export default function Home() {
-const [data, setData] = useState([]);
-const [nextPage, setNextPage] = useState('');
+export default function Home({navigation}) {
+    const [data, setData] = useState([]);
+    const [nextPage, setNextPage] = useState('');
 
     let listPokemon = axios.get('https://pokeapi.co/api/v2/pokemon/');
     useEffect(() => {
@@ -21,33 +21,32 @@ const [nextPage, setNextPage] = useState('');
     }, []);
 
     const fetchMoreData = () => {
-            axios.get(nextPage)
-                .then(function (response) {
-                    // console.log(response.data);
-                    setData({
-                        results: [...data.results, ...response.data.results],
-                    });
-                    setNextPage(response.data.next)
-                })
-                .catch(function (error) {
-                    console.log(error);
+        axios.get(nextPage)
+            .then(function (response) {
+                setData({
+                    results: [...data.results, ...response.data.results],
                 });
+                setNextPage(response.data.next)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
     return (
         <View style={styles.container}>
-            <View  style={styles.header}>
-            <Text style={styles.titre}>Pokedex</Text>
+            <View style={styles.header}>
+                <Text style={styles.titre}>Pokedex</Text>
             </View>
             <View>
-            <FlatList
-                      style={styles.list}
-                      numColumns={3}
-                      data={data.results}
-                      renderItem={({item}) => <PokemonCard name={item.name} url={item.url}/> }
-                      keyExtractor={item => item.name}
-                      onEndReached={fetchMoreData}
-                      onEndReachedThreshold={1.5}>
-            </FlatList>
+                <FlatList
+                    style={styles.list}
+                    numColumns={3}
+                    data={data.results}
+                    renderItem={({item}) => <PokemonCard name={item.name} url={item.url} navigation={navigation}/>}
+                    keyExtractor={item => item.name}
+                    onEndReached={fetchMoreData}
+                    onEndReachedThreshold={1}>
+                </FlatList>
             </View>
             <StatusBar style="auto"/>
         </View>
@@ -57,7 +56,7 @@ const [nextPage, setNextPage] = useState('');
 
 
 const styles = StyleSheet.create({
-    container : {
+    container: {
         marginTop: 50,
         backgroundColor: '#cbc9c9',
     },

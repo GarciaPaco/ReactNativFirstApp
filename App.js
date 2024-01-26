@@ -1,17 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
-import {StyleSheet, Text, View, FlatList,} from 'react-native';
-import CustomButton from './Components/CustomButton';
-import {useState} from "react";
-import Home from "./Screens/Home";
+// import { StatusBar } from 'expo-status-bar';
+// import {StyleSheet, Text, View, FlatList,} from 'react-native';
+// import CustomButton from './Components/CustomButton';
+// import {useState} from "react";
+// import Home from "./Screens/Home";
+import MyTabs from "./Navigation/Tabs";
+import {NavigationContainer} from "@react-navigation/native";
 
 export default function App() {
 
     return (
-    <View>
-        <Home>
-        </Home>
-    </View>
+        <NavigationContainer>
+            <MyTabs/>
+        </NavigationContainer>
+
+
     )
+
 
 //   const [text, setText] = useState("Hello World")
 //     const listAstrologySigns = [
