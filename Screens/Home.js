@@ -23,7 +23,6 @@ const [nextPage, setNextPage] = useState('');
     const fetchMoreData = () => {
             axios.get(nextPage)
                 .then(function (response) {
-                    // console.log(response.data);
                     setData({
                         results: [...data.results, ...response.data.results],
                     });
