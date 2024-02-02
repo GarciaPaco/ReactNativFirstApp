@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {StyleSheet, Text, View, FlatList,} from 'react-native';
+import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
 import {useEffect, useState} from "react";
 import {StatusBar} from "expo-status-bar";
 import PokemonCard from "../Components/PokemonCard";
@@ -33,10 +33,8 @@ export default function Home({navigation}) {
             });
     }
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.titre}>Pokedex</Text>
-            </View>
+        <SafeAreaView>
+
             <View>
                 <FlatList
                     style={styles.list}
@@ -49,21 +47,17 @@ export default function Home({navigation}) {
                 </FlatList>
             </View>
             <StatusBar style="auto"/>
-        </View>
+        </SafeAreaView>
 
     );
 }
 
 
 const styles = StyleSheet.create({
-    container: {
-        marginTop: 50,
-        backgroundColor: '#cbc9c9',
-    },
+
     header: {
         backgroundColor: '#ab0000',
         padding: 10,
-        marginTop: 50,
 
     },
     titre: {
