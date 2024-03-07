@@ -5,7 +5,6 @@ import React from "react";
 export default function PokemonCard({name, url, navigation}) {
     const id = url.split('/')[url.split('/').length - 2];
     const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-
     return (
         <TouchableOpacity style={styles.button} title="Go to Details" onPress={() => navigation.navigate('Détails', {id: id})}>
             <View style={styles.card}>
