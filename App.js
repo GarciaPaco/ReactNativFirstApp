@@ -3,11 +3,13 @@
 // import CustomButton from './Components/CustomButton';
 // import {useState} from "react";
 // import Home from "./Screens/Home";
+import { activateKeepAwake } from 'expo-keep-awake';
+
 import MyTabs from "./Navigation/Tabs";
 import {NavigationContainer} from "@react-navigation/native";
 
 export default function App() {
-
+    activateKeepAwake
     return (
         <NavigationContainer>
             <MyTabs/>
