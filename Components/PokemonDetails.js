@@ -3,8 +3,10 @@ import {StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity} from 'rea
 import React, {useEffect, useState} from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getData, removeData, storeData } from '../Utils/StorageService';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function Details({route}) {
+    const isFocused = useIsFocused();
     const [isInCrew, setIsInCrew] = useState(false);
     const [data, setData] = useState([]);
     const {id} = route.params;
@@ -12,29 +14,33 @@ export default function Details({route}) {
     const url = 'https://pokeapi.co/api/v2/pokemon/' + id + '/';
     const imageShiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(url);
-                const storedPokemon = await getData(`pokemon_${id}`);
-                setData(response.data);
-                setIsInCrew(storedPokemon !== null);
-            } catch (error) {
-                console.error(error);
-            }
-        };
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(url);
+            const storedPokemon = await getData(`pokemon_${id}`);
+            setData(response.data);
+            setIsInCrew(storedPokemon !== null);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
+    useEffect(() => {
         fetchData();
-    }, []);
+    }, [isInCrew]);
+
+    useEffect(() => {
+        if (isFocused) {
+            fetchData();
+        }
+    }, [isFocused]);
 
     function capitalizeFirstLetter(string) {
         if (string === undefined) {
             return;
         }
         return string.charAt(0).toUpperCase() + string.slice(1);
-
     }
-
 
     async function onPressAddToTeam() {
         try {
@@ -167,6 +173,4 @@ const styles = StyleSheet.create({
     text: {
         color: '#841584',
     },
-
-
 });
