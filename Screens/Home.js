@@ -11,7 +11,6 @@ export default function Home({navigation}) {
     let listPokemon = axios.get('https://pokeapi.co/api/v2/pokemon/');
     useEffect(() => {
         listPokemon.then(function (response) {
-            // console.log(response.data);
             setData(response.data);
             setNextPage(response.data.next)
         })
