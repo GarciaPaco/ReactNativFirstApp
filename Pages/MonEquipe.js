@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Button, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from "@react-navigation/native";
 
 export default function MonEquipe() {
     const [pokemons, setPokemons] = useState([]);
 
-    useEffect(() => {
-        fetchPokemons();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchPokemons();
+            return () => {};
+        }, [])
+    );
 
     const fetchPokemons = async () => {
         try {
