@@ -1,10 +1,11 @@
 import axios from 'axios';
-import {StyleSheet, Text, View, Image, Button, SafeAreaView} from 'react-native';
-import {useEffect, useState} from "react";
-import {getData, storeData, removeData} from "../Utils/StorageService";
+import {StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getData, removeData, storeData } from '../Utils/StorageService';
 
 export default function Details({route}) {
-
+    const [isInCrew, setIsInCrew] = useState(false);
     const [data, setData] = useState([]);
     const {id} = route.params;
     const image = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/' + id + '.gif';
@@ -12,13 +13,18 @@ export default function Details({route}) {
     const imageShiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`;
 
     useEffect(() => {
-        axios.get(url)
-            .then(function (response) {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(url);
+                const storedPokemon = await getData(`pokemon_${id}`);
                 setData(response.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                setIsInCrew(storedPokemon !== null);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
     }, []);
 
     function capitalizeFirstLetter(string) {
@@ -30,19 +36,51 @@ export default function Details({route}) {
     }
 
 
-    function onPressAddToTeam() {
-        getData('crew').then((crew) => {
+    async function onPressAddToTeam() {
+        try {
+            const pokemonData = JSON.stringify({
+                name: data.name,
+                image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/' + id + '.gif',
+            });
 
-        });
+            await AsyncStorage.setItem(`pokemon_${id}`, pokemonData);
+            const storedData = await AsyncStorage.getItem(`pokemon_${id}`);
+            setIsInCrew(true);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
-    function onPressRemoveFromTeam() {
-
+    async function onPressRemoveFromTeam() {
+        try {
+            await AsyncStorage.removeItem(`pokemon_${id}`);
+            setIsInCrew(false);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
         <SafeAreaView style={styles.container}>
+
             <View style={styles.card}>
+                {isInCrew ? (
+                    <TouchableOpacity style={styles.button} onPress={onPressRemoveFromTeam}>
+                        <Text style={styles.text}>Leave the crew</Text>
+                        <Image
+                            style={styles.openPokeball}
+                            source={require('../assets/openpokeball.png')}
+                        />
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity style={styles.button} onPress={onPressAddToTeam}>
+                        <Text style={styles.text}>Join the crew</Text>
+                        <Image
+                            style={styles.openPokeball}
+                            source={require('../assets/openpokeball.png')}
+                        />
+                    </TouchableOpacity>
+                )}
                 <Image style={styles.image} source={{uri: image}}/>
                 <View style={styles.titleDiv}>
                     <View style={styles.textDiv}>
@@ -56,21 +94,11 @@ export default function Details({route}) {
                         )}
                         <Text style={styles.title && styles.shiny}>Shiny :</Text>
                         <Image style={styles.imageShiny} source={{uri: imageShiny}}/>
+
                     </View>
                 </View>
             </View>
-            <Button style={styles.button}
-                    onPress={onPressAddToTeam}
-                    title="Join the crew"
-                    color="#841584"
-                    accessibilityLabel="Add the pokemon to your crew"
-            />
-            {/*           <Button style={styles.button}
-        onPress={onPressRemoveFromTeam}
-        title="Remove from the crew"
-        color="#841584"
-        accessibilityLabel="Remove the pokemon from your crew"
-    />*/}
+
         </SafeAreaView>
     )
 }
@@ -127,7 +155,18 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontWeight: "bold",
         textAlign: 'center',
-    }
+    },
+    button: {
+        alignItems: 'center',
+        padding: 10,
+    },
+    openPokeball: {
+        width: 50,
+        height: 50,
+    },
+    text: {
+        color: '#841584',
+    },
 
 
 });
